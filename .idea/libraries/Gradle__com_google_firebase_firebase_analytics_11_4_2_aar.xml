@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.firebase:firebase-analytics:11.4.2@aar" type="AndroidModuleLibraryType">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2603ce3083492bffdd077720b54a4eb2/jetified-firebase-analytics-11.4.2/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "584776211049",
+    "firebase_url": "https://yoega-6dc83.firebaseio.com",
+    "project_id": "yoega-6dc83",
+    "storage_bucket": "yoega-6dc83.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584776211049:android:0923fbda095ef16a10e0f8",
+        "android_client_info": {
+          "package_name": "com.yoega.yoega"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584776211049-1iqa6895c5nlnp9rl8r3lueedihss7tm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuGqwzKPZBNeWSyu0yC9qXwIpgUVF8cZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584776211049-1iqa6895c5nlnp9rl8r3lueedihss7tm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
