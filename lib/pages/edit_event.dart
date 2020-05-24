@@ -1,23 +1,54 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yoega/common/fire_storage_service.dart';
+import 'package:yoega/pages/upload_image_page.dart';
 import 'package:yoega/widgets/DateTimeFieldCustom.dart';
 import 'package:yoega/widgets/TextFieldWidget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class EditEventPage extends StatefulWidget{
+  DocumentSnapshot snapshot;
+  String eventID;
+  EditEventPage({Key key, @required this.eventID, this.snapshot}):super(key:key);
   @override
   _EditEventPageState createState() => new _EditEventPageState();
 }
 
 class _EditEventPageState extends State<EditEventPage> {
+
+  TextEditingController eventTitleController = new TextEditingController();
+  TextEditingController descriptionController = new TextEditingController();
+  TextEditingController venueController = new TextEditingController();
+  TextEditingController maxVolunteerController = new TextEditingController();
+  TextEditingController maxParticipantController = new TextEditingController();
+  TextEditingController startDateController = new TextEditingController();
+  TextEditingController endDateController = new TextEditingController();
+
+  Future<Widget> _getImage(BuildContext context, String image) async {
+    Image m;
+    await FireStorageService.loadFromStorage(context, image)
+        .then((downloadUrl) {
+      m = Image.network(
+        downloadUrl.toString(),
+        height:140,
+        width:140,
+        fit: BoxFit.cover,
+      );
+    });
+    return m;
+  }
+
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
+    String image = widget.snapshot['eventPic'];
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
           //Title should the users Name
           backgroundColor: Colors.teal,
-          title: Text("Edit (Place Event Title Here)", style: TextStyle(color: Colors.white),),
+          title: Text("Edit "+ widget.snapshot['title'], style: TextStyle(color: Colors.white),),
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
@@ -44,16 +75,44 @@ class _EditEventPageState extends State<EditEventPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             new Container(
-                                width: 140.0,
-                                height: 140.0,
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  image: new DecorationImage(
-                                    image: new ExactAssetImage(
-                                        'assets/images/as.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                )),
+                              child:FutureBuilder(
+                                  future: _getImage(context, image),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      if (snapshot.hasData) {
+                                        return Container(
+                                          width: 140,
+                                          height: 140,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              width: 2.0,
+                                              color: Colors.teal,
+                                            ),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: CircleAvatar(
+                                              child: ClipOval(
+                                                child: snapshot.data,
+                                              )
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    return Container(
+                                      width: 140.0,
+                                      height: 140.0,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image:  new DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image:AssetImage('default_pro_pic.png'),
+                                          )
+                                      ),
+                                    );
+                                  }
+                              )
+                            ),
                           ],
                         ),
                         Padding(
@@ -64,9 +123,12 @@ class _EditEventPageState extends State<EditEventPage> {
                                 new CircleAvatar(
                                   backgroundColor: Colors.teal,
                                   radius: 25.0,
-                                  child: new Icon(
-                                    Icons.camera_alt,
+                                  child: new IconButton(
+                                    icon: Icon(Icons.camera_alt),
                                     color: Colors.white,
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UploadImagePage(uploadState: ImageUploadState.eventPic,eventID: widget.eventID,eventSnapshot: widget.snapshot,)));
+                                    },
                                   ),
                                 )
                               ],
@@ -113,27 +175,27 @@ class _EditEventPageState extends State<EditEventPage> {
                             ],
                           )),
                       TextFieldLabel("Title"),
-                      TextFieldForm("Event Title", _status, myFocusNode,),
+                      TextFieldForm("Event Title", _status, myFocusNode,controller: eventTitleController,),
                       TextFieldLabel("Description"),
-                      TextFieldForm("Write something about yourself", _status, myFocusNode,maxLines: 10),
+                      TextFieldForm("Write something about the event", _status, myFocusNode,maxLines: 10,controller: descriptionController,),
                       TextFieldLabel("Venue"),
-                      TextFieldForm("Enter Venue", _status, myFocusNode),
+                      TextFieldForm("Enter Venue", _status, myFocusNode,controller: venueController,),
                       TextFieldLabel("Max Volunteer"),
-                      TextFieldForm("10", _status, myFocusNode,keyboardType: TextInputType.number,),
+                      TextFieldForm("", _status, myFocusNode,keyboardType: TextInputType.number,controller: maxVolunteerController,),
                       TextFieldLabel("Max Participants"),
-                      TextFieldForm("10", _status, myFocusNode,keyboardType: TextInputType.number,),
+                      TextFieldForm("", _status, myFocusNode,keyboardType: TextInputType.number, controller: maxParticipantController,),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                         child: Container(
                           color: Color(0xfdfdfdff),
-                          child:  Column(children: <Widget>[Text("Start Date & Time", style: TextStyle(fontWeight: FontWeight.bold)),BasicDateTimeField(),],),
+                          child:  Column(children: <Widget>[Text("Start Date & Time", style: TextStyle(fontWeight: FontWeight.bold)),BasicDateTimeField(controller: startDateController,),],),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                         child: Container(
                           color: Color(0xfdfdfdff),
-                          child:  Column(children: <Widget>[Text("End Date & Time", style: TextStyle(fontWeight: FontWeight.bold)),BasicDateTimeField(),],),
+                          child:  Column(children: <Widget>[Text("End Date & Time", style: TextStyle(fontWeight: FontWeight.bold)),BasicDateTimeField(controller: endDateController,),],),
                         ),
                       ),
                       !_status ? _getActionButtons() : new Container(),

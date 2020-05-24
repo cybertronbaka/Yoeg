@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
+import 'package:yoega/pages/edit_event.dart';
 import 'package:yoega/pages/general_user_page.dart';
 
 enum ImageUploadState{
@@ -20,8 +21,10 @@ enum ImageUploadState{
 }
 
 class UploadImagePage extends StatefulWidget{
+  String eventID;
+  DocumentSnapshot eventSnapshot;
   ImageUploadState uploadState;
-  UploadImagePage({Key key, @required this.uploadState}):super(key:key);
+  UploadImagePage({Key key, @required this.uploadState, this.eventID, this.eventSnapshot}):super(key:key);
   @override
   _UploadImagePageState createState()=> new _UploadImagePageState();
 }
@@ -92,14 +95,20 @@ class _UploadImagePageState extends State<UploadImagePage>{
            documentSnapshot.reference.updateData({'propic': fileName});
          });
        });
+       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GeneralUserView()));
       }else{
         //////TO-DO
+        Firestore.instance.collection('Events').document(widget.eventID).collection(
+            "info").getDocuments()
+            .then((querySnapshot) {
+          querySnapshot.documents.forEach((documentSnapshot) {
+            documentSnapshot.reference.updateData({'eventPic': fileName});
+          });
+        });
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EditEventPage(eventID: widget.eventID,snapshot: widget.eventSnapshot)));
 
-        //Firestore.instance.collection('Events').document(uid).collection(
-        //    "info").document("info").updateData({'propic': fileName});
       }
       print("URL is $url");
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GeneralUserView()));
     }catch (e){
       print(e.message);
     }
@@ -134,7 +143,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
             },
           ),
         ),
-        body: Container(
+        body: widget.uploadState == ImageUploadState.userPic?Container(
           child: StreamBuilder(
               stream: DbOps().getUserDataStreamSnapshots(context),
               builder: (context, snapshot) {
@@ -144,7 +153,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
                 return buildDisplay(context, snapshot.data.documents[0]);
               }
           ),
-        ),
+        ):Container(child:buildDisplay(context, widget.eventSnapshot)),
       );
   }
 
@@ -160,7 +169,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
     if(widget.uploadState == ImageUploadState.userPic) {
       image = snapshots['propic'];
     }else{
-
+      image = snapshots['eventPic'];
     }
     return Container(
           padding: EdgeInsets.only(top:10),
@@ -204,6 +213,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
                                   filePicker(context,snapshots['username']);
                                 }else{
                                   //Todo
+                                  filePicker(context, widget.eventID);
                                 }
                               },
                             ),
@@ -259,7 +269,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
                                 if(widget.uploadState == ImageUploadState.userPic){
                                   filePicker(context,snapshots['username']);
                                 }else{
-                                  //Todo
+                                  filePicker(context, widget.eventID);
                                 }
                               },
                             ),
@@ -310,7 +320,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
                           if(widget.uploadState == ImageUploadState.userPic){
                             filePicker(context,snapshots['username']);
                           }else{
-                            //Todo
+                            filePicker(context,widget.eventID);
                           }
                         },
                       ),

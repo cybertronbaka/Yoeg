@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/common/provider.dart';
+import 'package:yoega/pages/commentPage.dart';
 import 'package:yoega/pages/event_dashboard.dart';
 import 'package:yoega/pages/event_register.dart';
 import 'package:yoega/pages/notifications.dart';
@@ -11,7 +12,10 @@ import 'package:progress_indicators/progress_indicators.dart';
 import 'package:yoega/models/event.dart';
 import 'menu.dart';
 //import 'package:yoega/bloc/navigation_bloc/navigation_bloc.dart';
+/*TODO
 
+Send notifications after liking, commenting, and participate, volunteer
+ */
 class HomePage extends StatefulWidget{
   String uid;
   HomePage({Key key, this.uid}):super(key:key);
@@ -77,10 +81,12 @@ class HomePageBuild extends StatefulWidget {
   @override
   _HomePageBuildState createState()=> new _HomePageBuildState();
 }
-class _HomePageBuildState extends State<HomePageBuild>{
-  Stream<QuerySnapshot> getEventDataStreamSnapshots(BuildContext context) async* {
+class _HomePageBuildState extends State<HomePageBuild> {
+  Stream<QuerySnapshot> getEventDataStreamSnapshots(
+      BuildContext context) async* {
     yield* Firestore.instance.collection('Events').snapshots();
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -96,29 +102,30 @@ class _HomePageBuildState extends State<HomePageBuild>{
           return new ListView.builder(
               itemCount: snapshot.data.documents.length,
               itemBuilder: (BuildContext context, int index) =>
-                  buildCardItem(context, snapshot.data.documents[snapshot.data.documents.length - index - 1])
+                  buildCardItem(context,
+                      snapshot.data.documents[snapshot.data.documents.length -
+                          index - 1])
           );
         }
     );
   }
 
-  Widget buildCardItem(BuildContext context, DocumentSnapshot info){
+  Widget buildCardItem(BuildContext context, DocumentSnapshot info) {
     print("aaaaaaaaaaaaa");
     print("bbbbbbbbbbbbb");
-    var ft = Firestore.instance.collection('Events').document(info.documentID).collection("info").snapshots();
+    var ft = Firestore.instance.collection('Events')
+        .document(info.documentID)
+        .collection("info")
+        .snapshots();
     return StreamBuilder(
         stream: ft,
-        builder: (context, snapshot){
-          if (!snapshot.hasData) return Center(
-            child: JumpingDotsProgressIndicator(
-              fontSize: 40.0,
-            ),
-          );
-          return buildCard(context, snapshot.data.documents[0]);
+        builder: (context, snap) {
+          if (!snap.hasData) return Container();
+          return EventCard(eventID: info.documentID,snapshot:snap.data.documents[0]);
         }
     );
   }
-
+}
   Future<Widget> _getImage(BuildContext context, String image) async {
     Image m;
     await FireStorageService.loadFromStorage(context, image)
@@ -130,9 +137,61 @@ class _HomePageBuildState extends State<HomePageBuild>{
     });
     return m;
   }
+Future<Widget> _getImagePropic(BuildContext context, String image) async {
+  Image m;
+  await FireStorageService.loadFromStorage(context, image)
+      .then((downloadUrl) {
+    m = Image.network(
+      downloadUrl.toString(),
+      height:50,
+      width:50,
+      fit: BoxFit.cover,
+    );
+  });
+  return m;
+}
+class EventCard extends StatefulWidget {
+  DocumentSnapshot snapshot;
+  String eventID;
+  EventCard({Key key, @required this.snapshot, this.eventID}):super(key:key);
+  @override
+  _EventCardState createState()=> new _EventCardState();
+}
+class _EventCardState extends State<EventCard>{
+  bool init = true;
+  bool liked = false;
+  String propic;
 
-  Widget buildCard(BuildContext context, DocumentSnapshot snapshot) {
-    String image = snapshot['eventPic'];
+  void getLiked(BuildContext context) async{
+    String uid = await Provider.of(context).auth.getCurrentUID();
+    Firestore.instance.collection("Events").document(widget.eventID).collection("likes").where("likedByUID", isEqualTo: uid).getDocuments().then((query){
+      query.documents.forEach((x){
+        setState(() {
+          liked = true;
+        });
+      });
+    });
+  }
+
+  void getPropic(BuildContext context)async{
+    String uid = await Provider.of(context).auth.getCurrentUID();
+    Firestore.instance.collection("UserData").document(widget.snapshot['organizerUID']).collection("info").getDocuments().then((query){
+      query.documents.forEach((f){
+        setState(() {
+          propic = f['propic'];
+        });
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if(init) {
+      getLiked(context);
+      getPropic(context);
+      init = false;
+    }
+    String image = widget.snapshot['eventPic'];
     print("EventPic is "+ image);
     return InkWell(
       child: Card(
@@ -143,9 +202,51 @@ class _HomePageBuildState extends State<HomePageBuild>{
               child: Column(
                 children: <Widget>[
                   ListTile(
-                    leading: CircleAvatar(backgroundImage: AssetImage('assets/default_pro_pic.png'),),
-                    title: Text(snapshot['title']),
-                    subtitle: Text(snapshot['startDate'] + " to " + snapshot['endDate']),
+                    leading: Container(
+                      height:50,
+                        width:50,
+                child:FutureBuilder(
+                  future: _getImagePropic(context, propic),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState ==
+                    ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2.0,
+                          color: Colors.teal,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                          radius:50,
+                          child: ClipOval(
+                            child: snapshot.data,
+                          )
+                      ),
+                    );
+                  }
+                }
+                return Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1.0,
+                        color: Colors.teal,
+                      ),
+                      shape: BoxShape.circle,
+                      image:  new DecorationImage(
+                        fit: BoxFit.fill,
+                        image:AssetImage('assets/default_pro_pic.png'),
+                      )
+                  ),
+                );
+              }
+          )),
+                    title: Text(widget.snapshot['title']),
+                    subtitle: Text(widget.snapshot['startDate'] + " to " + widget.snapshot['endDate']),
                   ),
                   Expanded(
                     child: Container(
@@ -164,7 +265,7 @@ class _HomePageBuildState extends State<HomePageBuild>{
                               decoration: BoxDecoration(
                                   image:  new DecorationImage(
                                     fit: BoxFit.fill,
-                                    image:AssetImage('default_pro_pic.png'),
+                                    image:AssetImage('assets/default_pro_pic.png'),
                                   )
                               ),
                             );
@@ -179,9 +280,16 @@ class _HomePageBuildState extends State<HomePageBuild>{
                       Row(
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.favorite_border, color: Colors.black,),
+                            icon: liked==true?Icon(Icons.favorite, color: Colors.red,):Icon(Icons.favorite_border, color: Colors.black,),
                             onPressed: (){
-                              //toggle like
+                              if(liked){
+                                unlike(context);
+                              }else{
+                                like(context);
+                              }
+                              setState(() {
+                                liked = liked==true?false:true;
+                              });
                             },),
                           // SizedBox(width: 5.0),
                         ],
@@ -229,7 +337,7 @@ class _HomePageBuildState extends State<HomePageBuild>{
                           IconButton(
                             icon: Icon(Icons.comment, color: Colors.black,),
                             onPressed: (){
-                              //toggle like
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>CommentPage(eventID: widget.eventID,snapshot: widget.snapshot,)));
                             },),
                           // SizedBox(width: 5.0),
                         ],
@@ -244,5 +352,17 @@ class _HomePageBuildState extends State<HomePageBuild>{
       ),onTap: (){},
     );
   }
+  void like(BuildContext context) async{
+    String uid = await Provider.of(context).auth.getCurrentUID();
+    Firestore.instance.collection("Events").document(widget.eventID).collection("likes").document().setData({"likedByUID": uid});
+  }
 
+  void unlike(BuildContext context) async{
+    String uid = await Provider.of(context).auth.getCurrentUID();
+    Firestore.instance.collection("Events").document(widget.eventID).collection("likes").where("likedByUID", isEqualTo: uid).getDocuments().then((query){
+      query.documents.forEach((f){
+        Firestore.instance.collection("Events").document(widget.eventID).collection("likes").document(f.documentID).delete();
+      });
+    });
+  }
 }

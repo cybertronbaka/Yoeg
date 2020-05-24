@@ -122,12 +122,19 @@ class _RegisterEventPageState extends State<RegisterEventPage> {
     );
   }
 
-  Future registerEvent(BuildContext context)async{
+  Future registerEvent(BuildContext context) async{
     var uid = await Provider.of(context).auth.getCurrentUID();
-    Event event = Event(titleController.text, descriptionController.text,venueController.text, maxVolunteerController.text, maxParticipantController.text, startDateController.text, endDateController.text,uid);
+    Event event = Event(titleController.text, descriptionController.text,venueController.text, maxVolunteerController.text, maxParticipantController.text, startDateController.text, endDateController.text,uid,DateTime.now().toString());
     var ref = Firestore.instance.collection('Events').document();
     ref.setData({"Here": "true"});
     ref.collection("info").document("info").setData(event.toJson());
+    ref.collection("likes").document("count").setData({"count":0});
+    ref.collection("participants").document("count").setData({"count":0});
+    ref.collection("volunteers").document("count").setData({"count":0});
+    ref.collection("participantsRequest").document("count").setData({"count":0});
+    ref.collection("volunteerRequest").document("count").setData({"count":0});
+    ref.collection("comments").document("count").setData({"count":0});
+    ref.collection("participantsRequest").document("count").setData({"count":0});
     widget.tabController.animateTo(2);
   }
 }

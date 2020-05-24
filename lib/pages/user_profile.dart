@@ -25,6 +25,8 @@ class _UserPageState extends State<UserPage> {
         .then((downloadUrl) {
       m = Image.network(
         downloadUrl.toString(),
+        height:140,
+        width: 140,
         fit: BoxFit.fill,
       );
     });
@@ -102,20 +104,36 @@ class _UserPageState extends State<UserPage> {
                   ConnectionState.done) {
                 if (snapshot.hasData) {
                   return Container(
-                    width: 140.0,
-                    height: 140.0,
-                    child: snapshot.data,
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2.0,
+                        color: Colors.teal,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: CircleAvatar(
+                        radius:70,
+                        child: ClipOval(
+                          child: snapshot.data,
+                        )
+                    ),
                   );
                 }
               }
               return Container(
-                width: 140.0,
-                height: 140.0,
+                height: 140,
+                width: 140,
                 decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1.0,
+                      color: Colors.teal,
+                    ),
                     shape: BoxShape.circle,
                     image:  new DecorationImage(
                       fit: BoxFit.fill,
-                      image:AssetImage('default_pro_pic.png'),
+                      image:AssetImage('assets/default_pro_pic.png'),
                     )
                 ),
               );

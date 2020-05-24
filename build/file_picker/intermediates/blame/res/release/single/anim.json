@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_slide_out_top.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_fade_out.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_fade_in.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_fade_in.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_slide_out_bottom.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_slide_in_bottom.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_tooltip_enter.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_tooltip_enter.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_tooltip_exit.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_tooltip_exit.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_popup_exit.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_popup_exit.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_slide_in_top.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_popup_enter.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_popup_enter.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/anim/abc_grow_fade_in_from_bottom.xml"
+    }
+]

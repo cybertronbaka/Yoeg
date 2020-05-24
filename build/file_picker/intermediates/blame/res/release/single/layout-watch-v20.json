@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/layout-watch-v20/abc_alert_dialog_title_material.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/layout-watch-v20/abc_alert_dialog_title_material.xml"
+    },
+    {
+        "merged": "/root/AndroidStudioProjects/Final/yoega/build/file_picker/intermediates/res/merged/release/layout-watch-v20/abc_alert_dialog_button_bar_material.xml",
+        "source": "/root/.gradle/caches/transforms-2/files-2.1/95d5ca78332cc29d3d67493ff8679aa3/appcompat-1.0.0-beta01/res/layout-watch-v20/abc_alert_dialog_button_bar_material.xml"
+    }
+]

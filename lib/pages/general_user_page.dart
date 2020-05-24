@@ -7,6 +7,9 @@ import 'package:progress_indicators/progress_indicators.dart';
 import 'package:yoega/pages/upload_image_page.dart';
 import 'package:yoega/pages/user_profile.dart';
 import 'package:yoega/widgets/StretchedButton.dart';
+//TODO
+//Edit Volunteer and participate procedure.
+
 
 class GeneralUserView extends StatefulWidget{
   @override
@@ -15,17 +18,17 @@ class GeneralUserView extends StatefulWidget{
 }
 
 class _GeneralUserView extends State<GeneralUserView>{
-
   Future<Widget> _getImage(BuildContext context, String image) async {
     Image m;
     await FireStorageService.loadFromStorage(context, image)
         .then((downloadUrl) {
-      m = Image.network(
-        downloadUrl.toString(),
-        fit: BoxFit.fill,
-      );
-    });
-
+            m = Image.network(
+                 downloadUrl.toString(),
+              height:140,
+              width:140,
+                 fit: BoxFit.cover,
+                );
+          });
     return m;
   }
 
@@ -72,7 +75,6 @@ class _GeneralUserView extends State<GeneralUserView>{
             Column(
                 children: <Widget>[
                   new Container(
-                    height: 310.0,
                     color: Colors.white,
                     child: new Column(
                         children: <Widget>[
@@ -91,20 +93,37 @@ class _GeneralUserView extends State<GeneralUserView>{
                                               ConnectionState.done) {
                                             if (snapshots.hasData) {
                                                 return Container(
-                                                  width: 140.0,
-                                                  height: 140.0,
-                                                  child: snapshots.data,
+                                                  margin: EdgeInsets.all(20),
+                                                  width: 140,
+                                                  height: 140,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        width: 2.0,
+                                                        color: Colors.teal,
+                                                      ),
+                                                    shape: BoxShape.circle,
+                                                    ),
+                                                  child: CircleAvatar(
+                                                    radius:70,
+                                                    child: ClipOval(
+                                                      child: snapshots.data,
+                                                    )
+                                                  ),
                                                 );
                                             }
                                           }
                                           return Container(
-                                            width: 140.0,
-                                            height: 140.0,
+                                            height:140,
+                                            width: 140,
                                             decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  width: 1.0,
+                                                  color: Colors.teal,
+                                                ),
                                                 shape: BoxShape.circle,
                                                 image:  new DecorationImage(
                                                   fit: BoxFit.fill,
-                                                  image:AssetImage('default_pro_pic.png'),
+                                                  image:AssetImage('assets/default_pro_pic.png'),
                                                 )
                                             ),
                                           );

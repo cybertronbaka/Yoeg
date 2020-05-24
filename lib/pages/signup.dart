@@ -273,13 +273,15 @@ Widget showAlert(){
 
 Future signup(AuthService auth) async{
     UsersInfo usersInfo = new UsersInfo(usernameController.text, nameController.text, emailController.text, phoneController.text, _gender);
-  final db = Firestore.instance;
+  final db = Firestore.instance.collection("UserData");
   final formState = _formKey.currentState;
   formState.save();
   if(formState.validate()){
     try{
       String uid = await auth.createUserWithEmailAndPassword(_email, _password, _name);
-      await db.collection("UserData").document(uid).collection("info").add(usersInfo.toJson());
+     var ref = db.document(uid);
+     ref.setData({"here":true});
+     ref.collection("info").document("info").setData(usersInfo.toJson());
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeController(uid: uid)));
     }catch(e){
       print("Error"+e);

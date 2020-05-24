@@ -9,8 +9,9 @@ class Event{
   String endDate;
   String organizerUID;
   String eventPic = 'Events/defeventposter.jpg';
+  String postDate;
 
-  Event(this.eventTitle,this.description, this.venue, this.maxVolunteer, this.maxParticipant, this.startDate, this.endDate, this.organizerUID, {this.eventPic});
+  Event(this.eventTitle,this.description, this.venue, this.maxVolunteer, this.maxParticipant, this.startDate, this.endDate, this.organizerUID, this.postDate,{this.eventPic});
 
   Map<String, dynamic> toJson() => {
     'title': eventTitle,
@@ -22,5 +23,6 @@ class Event{
     'endDate': endDate,
     'organizerUID':organizerUID,
     'eventPic': "Events/defeventposter.jpg",
+    'postDate': postDate
   };
 }
