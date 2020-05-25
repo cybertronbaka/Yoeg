@@ -51,10 +51,20 @@ class AboutUsPage extends StatelessWidget {
                       child: Column(
                           children: <Widget>[
                             SizedBox(height: 30,),
-                            CircleAvatar(
-                              radius: MediaQuery.of(context).size.width/7 - 10,
-                              backgroundImage: NetworkImage(
-                                'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
+                            Container(
+                              height:100,
+                              width: 100,
+                              margin: EdgeInsets.only(top: 20),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1.0,
+                                    color: Colors.teal,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  image:  new DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image:AssetImage('assets/chimi.jpg'),
+                                  )
                               ),
                             ),
                             SizedBox(height: 10,),
@@ -72,10 +82,20 @@ class AboutUsPage extends StatelessWidget {
                         child: Column(
                             children: <Widget>[
                               SizedBox(height: 30,),
-                              CircleAvatar(
-                                radius: MediaQuery.of(context).size.width/7 - 10,
-                                backgroundImage: NetworkImage(
-                                  'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
+                              Container(
+                                height:100,
+                                width: 100,
+                                margin: EdgeInsets.only(top: 20),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1.0,
+                                      color: Colors.teal,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    image:  new DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image:AssetImage('assets/dorji.png'),
+                                    )
                                 ),
                               ),
                               SizedBox(height: 10,),
@@ -93,10 +113,20 @@ class AboutUsPage extends StatelessWidget {
                         child: Column(
                             children: <Widget>[
                               SizedBox(height: 30,),
-                              CircleAvatar(
-                                radius: MediaQuery.of(context).size.width/7 - 10,
-                                backgroundImage: NetworkImage(
-                                  'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
+                              Container(
+                                height:100,
+                                width: 100,
+                                margin: EdgeInsets.only(top: 20),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1.0,
+                                      color: Colors.teal,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    image:  new DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image:AssetImage('assets/lekpa.jpg'),
+                                    )
                                 ),
                               ),
                               SizedBox(height: 10,),
@@ -117,10 +147,20 @@ class AboutUsPage extends StatelessWidget {
                        child: Column(
                            children: <Widget>[
                              SizedBox(height: 30,),
-                             CircleAvatar(
-                               radius: MediaQuery.of(context).size.width/7 - 10,
-                               backgroundImage: NetworkImage(
-                                 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
+                             Container(
+                               height:100,
+                               width: 100,
+                               margin: EdgeInsets.only(top: 20),
+                               decoration: BoxDecoration(
+                                   border: Border.all(
+                                     width: 1.0,
+                                     color: Colors.teal,
+                                   ),
+                                   shape: BoxShape.circle,
+                                   image:  new DecorationImage(
+                                     fit: BoxFit.fill,
+                                     image:AssetImage('assets/sonam.jpg'),
+                                   )
                                ),
                              ),
                              SizedBox(height: 10,),
@@ -138,10 +178,20 @@ class AboutUsPage extends StatelessWidget {
                        child: Column(
                            children: <Widget>[
                              SizedBox(height: 30,),
-                             CircleAvatar(
-                               radius: MediaQuery.of(context).size.width/7 - 10,
-                               backgroundImage: NetworkImage(
-                                 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
+                             Container(
+                               height:100,
+                               width: 100,
+                               margin: EdgeInsets.only(top: 20),
+                               decoration: BoxDecoration(
+                                   border: Border.all(
+                                     width: 1.0,
+                                     color: Colors.teal,
+                                   ),
+                                   shape: BoxShape.circle,
+                                   image:  new DecorationImage(
+                                     fit: BoxFit.fill,
+                                     image:AssetImage('assets/lhazom.jpg'),
+                                   )
                                ),
                              ),
                              SizedBox(height: 10,),
@@ -159,11 +209,21 @@ class AboutUsPage extends StatelessWidget {
                        child: Column(
                            children: <Widget>[
                              SizedBox(height: 30,),
-                             CircleAvatar(
-                               radius: MediaQuery.of(context).size.width/7 - 10,
-                               backgroundImage: NetworkImage(
-                                'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
-                                ),
+                             Container(
+                               height:100,
+                               width: 100,
+                               margin: EdgeInsets.only(top: 20),
+                               decoration: BoxDecoration(
+                                   border: Border.all(
+                                     width: 1.0,
+                                     color: Colors.teal,
+                                   ),
+                                   shape: BoxShape.circle,
+                                   image:  new DecorationImage(
+                                     fit: BoxFit.fill,
+                                     image:AssetImage('assets/yangku.jpg'),
+                                   )
+                               ),
                              ),
                              SizedBox(height: 10,),
                              Text("Yangku Dorji", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:13))
@@ -173,6 +233,7 @@ class AboutUsPage extends StatelessWidget {
                ),
             ],
           ),
+              SizedBox(height: 100,),
         ])
     ));
   }

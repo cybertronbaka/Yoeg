@@ -56,6 +56,13 @@ flutter:
     - assets/logo.png
     - assets/default_pro_pic.png
     - assets/aboutus.png
+    - assets/chimi.jpg
+    - assets/lekpa.jpg
+    - assets/lhazom.jpg
+    - assets/sonam.jpg
+    - assets/yangku.jpg
+    - dorji.png
+
 
 flutter_icons:
     android: true

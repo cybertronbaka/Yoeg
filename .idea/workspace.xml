@@ -12,32 +12,17 @@
     <list default="true" id="f09356fa-44d7-464a-aaf4-3c04f72dfffb" name="Default Changelist" comment="Second Commit&#10;Login, Signup, Forgot Password functionalities achieved, Firestore connected">
       <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/.filecache" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/.filecache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/app.dill" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/app.dill" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/kernel_snapshot.d" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/kernel_snapshot.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/kernel_snapshot.stamp" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/97832b6b0e9970b40cad428a5f31c79e/kernel_snapshot.stamp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/LICENSE" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_build.d" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_build.d" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/LICENSE" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/outputs/apk/app.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/apk/app.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/outputs/apk/app.apk.sha1" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/apk/app.apk.sha1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/apk/debug/app-debug.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/models/event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/event.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/edit_event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/edit_event.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/event_dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/event_dashboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/event_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/event_register.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/general_user_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/general_user_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/signup.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/signup.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/upload_image_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/upload_image_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/user_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/user_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/about_us.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/about_us.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
