@@ -10,7 +10,10 @@ import 'package:yoega/pages/notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:yoega/models/event.dart';
+import 'package:yoega/pages/volunteer_participate_page.dart';
 import 'menu.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 //import 'package:yoega/bloc/navigation_bloc/navigation_bloc.dart';
 /*TODO
 
@@ -46,6 +49,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.teal,
+              leading: Container(),
               title: Text("Yoega", style: TextStyle(color: Colors.white)),
               bottom: TabBar(
                 controller: controller,
@@ -161,7 +165,8 @@ class _EventCardState extends State<EventCard>{
   bool init = true;
   bool liked = false;
   String propic;
-
+  String volunteerRequestID = "";
+  String participateRequestID = "";
   void getLiked(BuildContext context) async{
     String uid = await Provider.of(context).auth.getCurrentUID();
     Firestore.instance.collection("Events").document(widget.eventID).collection("likes").where("likedByUID", isEqualTo: uid).getDocuments().then((query){
@@ -183,12 +188,42 @@ class _EventCardState extends State<EventCard>{
       });
     });
   }
-
+  void checkIfUserVolunteered()async {
+    String uid = await Provider
+        .of(context)
+        .auth
+        .getCurrentUID();
+    Firestore.instance.collection("Events").document(widget.eventID).collection(
+        "volunteerRequest").where("userID", isEqualTo: uid)
+        .getDocuments()
+        .then((q) {
+      q.documents.forEach((f) {
+        setState(() {
+          volunteerRequestID = f.documentID;
+        });
+      });
+    });
+  }
+  void checkIfUserParticipated() async{
+    String uid = await Provider
+        .of(context)
+        .auth
+        .getCurrentUID();
+    Firestore.instance.collection("Events").document(widget.eventID).collection("participantsRequest").where("userID", isEqualTo: uid).getDocuments().then((q){
+      q.documents.forEach((f){
+        setState(() {
+          participateRequestID = f.documentID;
+        });
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     if(init) {
       getLiked(context);
       getPropic(context);
+      checkIfUserVolunteered();
+      checkIfUserParticipated();
       init = false;
     }
     String image = widget.snapshot['eventPic'];
@@ -297,18 +332,68 @@ class _EventCardState extends State<EventCard>{
                       Row(
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.pan_tool, color: Colors.black,),
+                            icon: Icon(Icons.pan_tool, color: volunteerRequestID.length!=0?Colors.redAccent:Colors.black,),
                             onPressed: (){
                               //toggle like
-                            },),
+                              if(widget.snapshot['volunteerProc'] == "PDF") {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        VolunteerParticipatePage(
+                                          snapshot: widget.snapshot,
+                                          eventID: widget.eventID,
+                                          volunteerParticipate: VolunteerParticipate
+                                              .volunteer,)));
+                              }else if(widget.snapshot['volunteerProc'] == "Simple"){
+                                if(volunteerRequestID.length != 0){
+                                  Firestore.instance.collection("Events").document(widget.eventID).collection("volunteerRequest").document(volunteerRequestID).delete();
+                                  setState(() {
+                                    volunteerRequestID = "";
+                                  });
+                                  Fluttertoast.showToast(
+                                      msg: "Your request to volunteer in this event is Cancelled",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 3,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0
+                                  );
+                                }else {
+                                  volunteer(context);
+                                  checkIfUserVolunteered();
+                                }
+                              }
+                              },),
                           //SizedBox(width: 5.0),
                           Container(
                               width: 85,
                               child: FlatButton(
-                                child: Text("Volunteer", style: TextStyle(fontSize: 12,color: Colors.black),),
+                                child: Text("Volunteer", style: TextStyle(fontSize: 12,color: volunteerRequestID.length!=0?Colors.redAccent:Colors.black),),
                                 onPressed: (){
                                   //toggle like
-                                },
+                                  if(widget.snapshot['volunteerProc'] == "PDF") {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>VolunteerParticipatePage(snapshot: widget.snapshot,eventID: widget.eventID,volunteerParticipate: VolunteerParticipate.volunteer,)));
+                                  }else if(widget.snapshot['volunteerProc'] == "Simple"){
+                                    if(volunteerRequestID.length != 0){
+                                      Firestore.instance.collection("Events").document(widget.eventID).collection("volunteerRequest").document(volunteerRequestID).delete();
+                                      setState(() {
+                                        volunteerRequestID = "";
+                                      });
+                                      Fluttertoast.showToast(
+                                          msg: "Your request to volunteer in this event is Cancelled",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 3,
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0
+                                      );
+                                    }else {
+                                      volunteer(context);
+                                      checkIfUserVolunteered();
+                                    }
+                                  }
+                               },
                               )
                           )
                         ],
@@ -316,17 +401,73 @@ class _EventCardState extends State<EventCard>{
                       Row(
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.person_pin_circle, color: Colors.black,),
+                            icon: Icon(Icons.person_pin_circle, color: participateRequestID.length!=0?Colors.tealAccent:Colors.black,),
                             onPressed: (){
                               //toggle like
+                              if(widget.snapshot['participateProc'] == "PDF") {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        VolunteerParticipatePage(
+                                          snapshot: widget.snapshot,
+                                          eventID: widget.eventID,
+                                          volunteerParticipate: VolunteerParticipate
+                                              .participate,)));
+                              }else if(widget.snapshot['participateProc'] == "Simple"){
+                                if(participateRequestID.length != 0){
+                                  Firestore.instance.collection("Events").document(widget.eventID).collection("participantsRequest").document(participateRequestID).delete();
+                                  setState(() {
+                                    participateRequestID = "";
+                                  });
+                                  Fluttertoast.showToast(
+                                      msg: "Your request to participate in this event is Cancelled",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 3,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0
+                                  );
+                                }else {
+                                  participate(context);
+                                  checkIfUserParticipated();
+                                }
+                              }
                             },),
                           //SizedBox(width: 5.0),
                           Container(
                               width: 93,
                               child: FlatButton(
-                                child: Text("Participate", style: TextStyle(fontSize: 12,color: Colors.black),),
+                                child: Text("Participate", style: TextStyle(fontSize: 12,color:  participateRequestID.length!=0?Colors.tealAccent:Colors.black),),
                                 onPressed: (){
                                   //toggle like
+                                  if(widget.snapshot['participateProc'] == "PDF") {
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) =>
+                                            VolunteerParticipatePage(
+                                              snapshot: widget.snapshot,
+                                              eventID: widget.eventID,
+                                              volunteerParticipate: VolunteerParticipate
+                                                  .participate,)));
+                                  }else if(widget.snapshot['participateProc'] == "Simple"){
+                                    if(participateRequestID.length != 0){
+                                      Firestore.instance.collection("Events").document(widget.eventID).collection("participantsRequest").document(participateRequestID).delete();
+                                      setState(() {
+                                        participateRequestID = "";
+                                      });
+                                      Fluttertoast.showToast(
+                                          msg: "Your request to participate in this event is Cancelled",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 3,
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0
+                                      );
+                                    }else {
+                                      participate(context);
+                                      checkIfUserParticipated();
+                                    }
+                                  }
                                 },
                               )
                           )
@@ -354,7 +495,7 @@ class _EventCardState extends State<EventCard>{
   }
   void like(BuildContext context) async{
     String uid = await Provider.of(context).auth.getCurrentUID();
-    Firestore.instance.collection("Events").document(widget.eventID).collection("likes").document().setData({"likedByUID": uid});
+    Firestore.instance.collection("Events").document(widget.eventID).collection("likes").add({"likedByUID": uid, "likedDate":DateTime.now().toString()});
   }
 
   void unlike(BuildContext context) async{
@@ -364,5 +505,34 @@ class _EventCardState extends State<EventCard>{
         Firestore.instance.collection("Events").document(widget.eventID).collection("likes").document(f.documentID).delete();
       });
     });
+  }
+
+  void volunteer(BuildContext context) async{
+    String uid = await Provider.of(context).auth.getCurrentUID();
+    Firestore.instance.collection('Events').document(widget.eventID).collection(
+        "volunteerRequest").add({'userID': uid, 'method': "Simple", "requestDate": DateTime.now().toString(), "AcceptedRejected" :"none", "pdfURL": null});
+    Fluttertoast.showToast(
+        msg: "Volunteer Request Successful. We will notify you when the organizer accepts the request.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
+  void participate(BuildContext context) async{
+    String uid = await Provider.of(context).auth.getCurrentUID();
+    Firestore.instance.collection('Events').document(widget.eventID).collection(
+        "participantsRequest").add({'userID': uid, 'method': "Simple", "requestDate": DateTime.now().toString(), "AcceptedRejected" :"none", "pdfURL": null});
+    Fluttertoast.showToast(
+        msg: "Participation Request Successful. We will notify you when the organizer accepts the request.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
   }
 }

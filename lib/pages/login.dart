@@ -51,6 +51,16 @@ class _LoginPageState extends State<LoginPage>{
     final AuthService auth = Provider.of(context).auth;
     // TODO: implement build
     return  Scaffold(
+      appBar: AppBar(
+        //Title should the users Name
+        backgroundColor: Colors.teal,
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       backgroundColor: Colors.teal,
       body: Stack(
         children: <Widget>[

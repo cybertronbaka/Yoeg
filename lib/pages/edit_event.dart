@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yoega/common/fire_storage_service.dart';
+import 'package:yoega/common/provider.dart';
+import 'package:yoega/pages/login.dart';
 import 'package:yoega/pages/upload_image_page.dart';
+import 'package:yoega/pages/upload_pdf_page.dart';
 import 'package:yoega/widgets/DateTimeFieldCustom.dart';
 import 'package:yoega/widgets/TextFieldWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +18,11 @@ class EditEventPage extends StatefulWidget{
 }
 
 class _EditEventPageState extends State<EditEventPage> {
+  String image;
+  bool init = true;
+  String participationProc ;
+  String volunteerProc;
+  bool participateBool = false, volunteerBool = false;
 
   TextEditingController eventTitleController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
@@ -42,7 +50,24 @@ class _EditEventPageState extends State<EditEventPage> {
   final FocusNode myFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
-    String image = widget.snapshot['eventPic'];
+    if(init){
+      image = widget.snapshot['eventPic'];
+      eventTitleController.text = widget.snapshot['title'];
+      venueController.text = widget.snapshot['venue'];
+      descriptionController.text = widget.snapshot['description'];
+      startDateController.text = widget.snapshot['startDate'];
+      endDateController.text = widget.snapshot['endDate'];
+      maxParticipantController.text = widget.snapshot['maxParticipant'];
+      maxVolunteerController.text = widget.snapshot['maxVolunteer'];
+      participationProc = widget.snapshot['participateProc'];
+      volunteerProc = widget.snapshot['volunteerProc'];
+      participateBool = widget.snapshot['participateProc'] == "PDF";
+      volunteerBool = widget.snapshot['volunteerProc'] == "PDF";
+      init = false;
+    }
+
+
+
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
@@ -52,7 +77,7 @@ class _EditEventPageState extends State<EditEventPage> {
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-            Navigator.pop(context);
+              Navigator.pop(context);
             },
           ),
         ),
@@ -185,19 +210,58 @@ class _EditEventPageState extends State<EditEventPage> {
                       TextFieldLabel("Max Participants"),
                       TextFieldForm("", _status, myFocusNode,keyboardType: TextInputType.number, controller: maxParticipantController,),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
                         child: Container(
                           color: Color(0xfdfdfdff),
                           child:  Column(children: <Widget>[Text("Start Date & Time", style: TextStyle(fontWeight: FontWeight.bold)),BasicDateTimeField(controller: startDateController,),],),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
                         child: Container(
                           color: Color(0xfdfdfdff),
                           child:  Column(children: <Widget>[Text("End Date & Time", style: TextStyle(fontWeight: FontWeight.bold)),BasicDateTimeField(controller: endDateController,),],),
                         ),
                       ),
+                      TextFieldLabel("Participation Procedure",),
+                      Row(children: <Widget>[
+                        FlatButton(child: Text("Simple",style: participationProc=="Simple"?TextStyle( fontWeight: FontWeight.bold, color: Colors.teal):TextStyle( fontWeight: FontWeight.normal, color: Colors.black)),onPressed: (){
+                           if(participationProc != "Simple") {
+                             setState(() {
+                               participateBool = false;
+                               participationProc = "Simple";
+                             });
+                           }
+                        },),
+                        FlatButton(child: Text("PDF",style: participationProc=="PDF"?TextStyle( fontWeight: FontWeight.bold, color: Colors.teal):TextStyle( fontWeight: FontWeight.normal, color: Colors.black)),onPressed: (){
+                          if(participationProc != "PDF") {
+                            setState(() {
+                              participateBool = true;
+                              participationProc = "PDF";
+                            });
+                          }
+                        },)
+                      ],),
+                      TextFieldLabel("Volunteer Procedure",),
+                      Row(children: <Widget>[
+                        FlatButton(
+                          child: Text("Simple",style: volunteerProc=="Simple"?TextStyle( fontWeight: FontWeight.bold, color: Colors.teal):TextStyle( fontWeight: FontWeight.normal, color: Colors.black)),onPressed: (){
+                          if(volunteerProc != "Simple") {
+                            setState(() {
+                              volunteerBool = false;
+                              volunteerProc = "Simple";
+                            });
+                          }
+                        },),
+                        FlatButton(child: Text("PDF",style: volunteerProc=="PDF"?TextStyle( fontWeight: FontWeight.bold, color: Colors.teal):TextStyle( fontWeight: FontWeight.normal, color: Colors.black)),onPressed: (){
+                          if(volunteerProc != "PDF") {
+                            setState(() {
+                              volunteerBool = true;
+                              volunteerProc = "PDF";
+                            });
+                          }
+                        },)
+                      ],),
                       !_status ? _getActionButtons() : new Container(),
                     ],
                   ),
@@ -239,6 +303,7 @@ class _EditEventPageState extends State<EditEventPage> {
                         _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
                       });
+                      updateData(context);
                     },
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20.0)),
@@ -288,6 +353,54 @@ class _EditEventPageState extends State<EditEventPage> {
         });
       },
     );
+  }
+
+  void updateData(BuildContext context) async{
+    if(eventTitleController.text.length != 0 || eventTitleController.text != widget.snapshot['title']) {
+      Firestore.instance.collection('Events').document(widget.eventID)
+          .collection("info").document("info")
+          .updateData({'title': eventTitleController.text});
+    }
+    if(venueController.text.length != 0 ||     venueController.text != widget.snapshot['venue']){
+      Firestore.instance.collection('Events').document(widget.eventID).collection("info").document("info").updateData({'venue':venueController.text});
+    }
+    if(descriptionController.text.length != 0 || descriptionController.text != widget.snapshot['description']){
+      Firestore.instance.collection('Events').document(widget.eventID)
+          .collection("info").document("info")
+          .updateData({'description': descriptionController.text});
+    }
+    if(maxVolunteerController.text.length != 0|| maxVolunteerController.text != widget.snapshot['maxVolunteer']) {
+      Firestore.instance.collection('Events').document(widget.eventID)
+          .collection("info").document("info")
+          .updateData({'maxVolunteer': maxVolunteerController.text});
+    }
+    if(maxParticipantController.text.length != 0 || maxParticipantController.text != widget.snapshot['maxParticipant']) {
+      Firestore.instance.collection('Events').document(widget.eventID)
+          .collection("info").document("info")
+          .updateData({'maxParticipant': maxParticipantController.text});
+    }
+    if(startDateController.text.length != 0 || startDateController.text != widget.snapshot['startDate']){
+      Firestore.instance.collection('Events').document(widget.eventID).collection("info").document("info").updateData({'startDate':startDateController.text});
+    }
+    if(endDateController.text.length!=0|| endDateController.text != widget.snapshot['endDate']) {
+      Firestore.instance.collection('Events').document(widget.eventID)
+          .collection("info").document("info")
+          .updateData({'endDate': endDateController.text});
+    }
+    print("ParticipateBool" + participateBool.toString());
+    print("VolunteerBool" + volunteerBool.toString());
+
+    if(participationProc == "PDF" || volunteerProc == "PDF") {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+          UploadPDFPage(snapshot: widget.snapshot,
+            eventID: widget.eventID,
+            partipationPDFproc: participateBool,
+            volunteerPDFproc: volunteerBool,)));
+    }
+    if(participationProc != "PDF" || volunteerProc != "PDF") {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeController()));
+    }
   }
 
 }

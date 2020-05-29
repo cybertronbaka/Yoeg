@@ -10,6 +10,8 @@ class Event{
   String organizerUID;
   String eventPic = 'Events/defeventposter.jpg';
   String postDate;
+  String participantProc;
+  String volunteerProc;
 
   Event(this.eventTitle,this.description, this.venue, this.maxVolunteer, this.maxParticipant, this.startDate, this.endDate, this.organizerUID, this.postDate,{this.eventPic});
 
@@ -23,6 +25,10 @@ class Event{
     'endDate': endDate,
     'organizerUID':organizerUID,
     'eventPic': "Events/defeventposter.jpg",
-    'postDate': postDate
+    'postDate': postDate,
+    'participateProc': "Simple",
+    'volunteerProc': "Simple",
+    'participationPDF': null,
+    'volunteerPDF':null,
   };
 }

@@ -40,7 +40,12 @@ dev_dependencies:
   file_picker: 1.4.3+1
   firebase_core: ^0.4.4+3
   auto_size_text: ^2.1.0
-# For information on the generic Dart part of this file, see the
+  flutter_launcher_icons: ^0.7.4
+  http: ^0.12.1
+  dio: ^3.0.9
+  path_provider: ^1.6.9
+  ext_storage: ^1.0.3
+  permission_handler: ^5.0.0+hotfix.6
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
@@ -61,13 +66,14 @@ flutter:
     - assets/lhazom.jpg
     - assets/sonam.jpg
     - assets/yangku.jpg
-    - dorji.png
+    - assets/dorji.png
+    - assets/pdf.png
 
 
 flutter_icons:
     android: true
     ios: true
-    image_path: "assets/images/logo.png"
+    image_path: "assets/logo.png"
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

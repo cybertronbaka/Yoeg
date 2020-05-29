@@ -105,7 +105,7 @@ class _SignupPageState extends State<SignupPage>{
 
               Container(
                 color: Colors.white,
-                child:DropdownButton<String>(
+                child: DropdownButton<String>(
                       hint: Text("Gender"),
                       value: _gender,
                       onChanged: (String newValue) {
@@ -282,7 +282,7 @@ Future signup(AuthService auth) async{
      var ref = db.document(uid);
      ref.setData({"here":true});
      ref.collection("info").document("info").setData(usersInfo.toJson());
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeController(uid: uid)));
+     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeController(uid: uid)));
     }catch(e){
       print("Error"+e);
       setState(() {
