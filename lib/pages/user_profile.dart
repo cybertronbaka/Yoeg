@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/models/user_info.dart';
+import 'package:yoega/pages/checkConnection.dart';
 import 'package:yoega/pages/upload_image_page.dart';
 import 'package:yoega/widgets/TextFieldWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,6 +48,27 @@ class _UserPageState extends State<UserPage> {
     yield* Firestore.instance.collection('UserData').document(uid).collection('info').snapshots();
   }
 
+
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +100,7 @@ class _UserPageState extends State<UserPage> {
     emailController.text = snapshot['email'];
     phoneController.text = snapshot['phone'];
     String image = snapshot['propic'];
-    return Container(
+    return connected?Container(
         color: Colors.white,
         child: new ListView(
           children: <Widget>[
@@ -217,7 +239,7 @@ class _UserPageState extends State<UserPage> {
             ),
           ],
         ),
-    );
+    ):NoInternetConnection();
   }
   Future updateData(BuildContext context) async{
     var uid = await Provider.of(context).auth.getCurrentUID();

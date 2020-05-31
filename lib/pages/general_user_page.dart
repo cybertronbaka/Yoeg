@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/common/provider.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:yoega/pages/checkConnection.dart';
 import 'package:yoega/pages/upload_image_page.dart';
 import 'package:yoega/pages/user_profile.dart';
 import 'package:yoega/widgets/StretchedButton.dart';
@@ -37,10 +40,29 @@ class _GeneralUserView extends State<GeneralUserView>{
     final uid = await Provider.of(context).auth.getCurrentUID();
     yield* Firestore.instance.collection('UserData').document(uid).collection('info').snapshots();
   }
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return connected?Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
         leading: new IconButton(
@@ -64,7 +86,7 @@ class _GeneralUserView extends State<GeneralUserView>{
         }
       ),
     )
-    );
+    ):NoInternetConnection();
   }
   Widget buildUserPage(BuildContext context, DocumentSnapshot snapshot){
     String image = snapshot['propic'];

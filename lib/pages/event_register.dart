@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:yoega/common/provider.dart';
 import 'package:yoega/utilities/CircularImage.dart';
@@ -10,6 +12,8 @@ import 'package:yoega/models/event.dart';
 //import 'package:yoega/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
+import 'checkConnection.dart';
 
 
 
@@ -38,9 +42,28 @@ class _RegisterEventPageState extends State<RegisterEventPage> {
   final timeFormat = DateFormat("h:mm a");
   DateTime date;
   TimeOfDay time;
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return connected?Scaffold(
       body:Center(
         child: Container(
             width: MediaQuery.of(context).size.width,
@@ -119,7 +142,7 @@ class _RegisterEventPageState extends State<RegisterEventPage> {
             ),
           ),
       ),
-    );
+    ):NoInternetConnection();
   }
 
   Future registerEvent(BuildContext context) async{

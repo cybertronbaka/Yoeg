@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:yoega/common/AuthService.dart';
 import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/common/provider.dart';
+import 'package:yoega/pages/checkConnection.dart';
 import 'package:yoega/pages/database_ops.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,7 +38,25 @@ class _UploadImagePageState extends State<UploadImagePage>{
   bool isUploaded = true;
   String result = '';
 
-
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   Future filePicker(BuildContext context,String username) async {
     try {
       if (fileType == 'image') {
@@ -131,7 +150,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
   Widget build(BuildContext context) {
 
     // TODO: implement build
-      return Scaffold(
+      return connected?Scaffold(
         appBar: AppBar(
           //Title should the users Name
           backgroundColor: Colors.teal,
@@ -154,7 +173,7 @@ class _UploadImagePageState extends State<UploadImagePage>{
               }
           ),
         ):Container(child:buildDisplay(context, widget.eventSnapshot)),
-      );
+      ):NoInternetConnection();
   }
 
   Future getUid(BuildContext context) async{

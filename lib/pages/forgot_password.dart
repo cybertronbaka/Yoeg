@@ -1,8 +1,11 @@
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yoega/common/AuthService.dart';
 import 'package:yoega/common/provider.dart';
+import 'package:yoega/pages/checkConnection.dart';
 import 'package:yoega/pages/login.dart';
 import 'package:yoega/widgets/StretchedButton.dart';
 import 'package:yoega/widgets/TextFieldWidget.dart';
@@ -15,10 +18,29 @@ class ForgotPasswordPage extends StatefulWidget{
 class _ForgotPasswordPageState extends State<ForgotPasswordPage>{
  String _email, _warning;
   final _formkey = GlobalKey<FormState>();
+ bool connected = true;
+ checkConnection() async{
+   try {
+     final result = await InternetAddress.lookup('google.com');
+     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+       setState(() {
+         connected = true;
+       });
+     }
+   } on SocketException catch (_) {
+     setState(() {
+       connected = false;
+     });    }
+ }
+ @override
+ void initState(){
+   super.initState();
+   checkConnection();
+ }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return connected?Scaffold(
         backgroundColor: Colors.teal,
         body: Container(
       color: Colors.teal,
@@ -61,7 +83,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>{
           ],
         )
       ),),
-    ));
+    )):NoInternetConnection();
   }
 
  Widget showAlert(){

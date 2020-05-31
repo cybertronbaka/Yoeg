@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,25 +12,48 @@ import 'package:yoega/utilities/CircularImage.dart';
 import 'package:yoega/widgets/StretchedButton.dart';
 import 'package:yoega/widgets/StretchedLabel.dart';
 import 'package:yoega/widgets/TextFieldWidget.dart';
-
+import 'package:yoega/pages/checkConnection.dart';
 // ignore: must_be_immutable
-class HomeController extends StatelessWidget{
+class HomeController extends StatefulWidget {
   String uid;
   HomeController({Key key, this.uid}):super(key:key);
+  _HomeControllerState createState()=>new _HomeControllerState();
+}
+class _HomeControllerState extends State<HomeController>{
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final AuthService auth = Provider.of(context).auth;
-    return StreamBuilder(
+
+    return connected?StreamBuilder(
       stream: auth.onAuthStateChanged,
       builder: (context, AsyncSnapshot<String> snapshot){
         if(snapshot.connectionState == ConnectionState.active){
           final bool signedIn = snapshot.hasData;
-          return signedIn ? HomePage(uid: uid): LoginPage();
+          return signedIn ? HomePage(uid: widget.uid): LoginPage();
         }
         return CircularProgressIndicator();
       },
-    );
+    ):NoInternetConnection();
   }
 }
 
@@ -45,12 +70,30 @@ class _LoginPageState extends State<LoginPage>{
   String _email, _password, _error;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
     final AuthService auth = Provider.of(context).auth;
     // TODO: implement build
-    return  Scaffold(
+    return  connected?Scaffold(
       appBar: AppBar(
         //Title should the users Name
         backgroundColor: Colors.teal,
@@ -150,7 +193,7 @@ class _LoginPageState extends State<LoginPage>{
           )
         )],
       ),
-    );
+    ):NoInternetConnection();
   }
 
   Widget showAlert(){

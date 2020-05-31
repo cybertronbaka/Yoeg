@@ -1,12 +1,38 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:yoega/pages/checkConnection.dart';
 
 //import 'package:yoega/bloc/navigation_bloc/navigation_bloc.dart';
 
-class NotificationSettingsPage extends StatelessWidget {
+class NotificationSettingsPage extends StatefulWidget {
+  @override
+  _NotificationsSettingsPageState createState()=> new _NotificationsSettingsPageState();
+}
+class _NotificationsSettingsPageState extends State<NotificationSettingsPage>{
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return connected?Scaffold(
       appBar: AppBar(
         //Title should the users Name
         backgroundColor: Colors.teal,
@@ -26,7 +52,7 @@ class NotificationSettingsPage extends StatelessWidget {
             ],)
 
             ),
-    );
+    ):NoInternetConnection();
   }
 }
 

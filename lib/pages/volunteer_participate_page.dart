@@ -16,6 +16,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/common/provider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:yoega/pages/checkConnection.dart';
 
 
 enum VolunteerParticipate{
@@ -118,12 +119,30 @@ class _VolunteerParticipatePage extends State<VolunteerParticipatePage>{
       });
     }
   }
-
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
     init();
     // TODO: implement build
-    return Scaffold(
+    return connected?Scaffold(
         appBar: AppBar(
           //Title should theimport 'package:path_provider/path_provider.dart'; users Name
           backgroundColor: Colors.teal,
@@ -216,7 +235,7 @@ class _VolunteerParticipatePage extends State<VolunteerParticipatePage>{
             ],
           ),
         ),
-    );
+    ):NoInternetConnection();
   }
 
   void cancelRequest()async{

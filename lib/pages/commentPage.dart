@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/common/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:yoega/pages/checkConnection.dart';
 
 
 class CommentPage extends StatefulWidget{
@@ -30,10 +33,31 @@ Future<Widget> _getImage(BuildContext context, String image) async {
 }
 
 class _CommentPageState extends State<CommentPage>{
+  bool connected = true;
+checkConnection() async{
+  try {
+    final result = await InternetAddress.lookup('google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      setState(() {
+        connected = true;
+      });
+    }
+  } on SocketException catch (_) {
+    setState(() {
+      connected = false;
+    });    }
+}
+@override
+void initState(){
+  super.initState();
+  checkConnection();
+}
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return connected?Scaffold(
         appBar: AppBar(
         //Title should the users Name
         backgroundColor: Colors.teal,
@@ -57,7 +81,7 @@ class _CommentPageState extends State<CommentPage>{
         ),
       ),
       bottomSheet: Container(height:63,child: AddCommentCard(eventID: widget.eventID, snapshot: widget.snapshot,),),
-    );
+    ):NoInternetConnection();
   }
   Widget buildComments(BuildContext context){
 

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:yoega/pages/checkConnection.dart';
 
 class ManageEventPage extends StatefulWidget{
   @override
@@ -8,10 +11,29 @@ class ManageEventPage extends StatefulWidget{
 }
 
 class _ManageEventPageState extends State<ManageEventPage>{
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return connected?Scaffold(
         appBar: AppBar(
         //Title should the users Name
         backgroundColor: Colors.teal,
@@ -45,6 +67,6 @@ class _ManageEventPageState extends State<ManageEventPage>{
           ),
         ],
       ),
-    );
+    ):NoInternetConnection();
   }
 }

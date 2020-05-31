@@ -1,15 +1,41 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:yoega/pages/checkConnection.dart';
 import 'package:yoega/utilities/CircularImage.dart';
 
 //import 'package:yoega/bloc/navigation_bloc/navigation_bloc.dart';
 
-class NotificationsPage extends StatelessWidget {
+class NotificationsPage extends StatefulWidget{
+  @override
+  _NotificationsPageState createState()=> new _NotificationsPageState();
+}
+class _NotificationsPageState extends State<NotificationsPage> {
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
-    return  ListView.builder(
+    return  connected?ListView.builder(
       itemCount: 3,
       itemBuilder: (context, index)=>Notification(),
-    );
+    ):NoInternetConnection();
   }
 }
 

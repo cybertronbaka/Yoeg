@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:yoega/common/AuthService.dart';
 import 'package:yoega/common/menu_item.dart';
 import 'package:yoega/common/provider.dart';
 import 'package:yoega/pages/about_us.dart';
+import 'package:yoega/pages/checkConnection.dart';
 import 'package:yoega/pages/general_user_page.dart';
 import 'package:yoega/pages/home.dart';
 import 'package:yoega/pages/login.dart';
@@ -27,10 +30,29 @@ class _MenuPageState extends State<MenuPage> {
     final uid = await Provider.of(context).auth.getCurrentUID();
     yield* Firestore.instance.collection('UserData').document(uid).collection('info').snapshots();
   }
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
 
-    return  Container(
+    return connected?Container(
       child: StreamBuilder(
           stream: getUsersInfoStreamSnapshots(context),
           builder: (context, snapshot) {
@@ -43,7 +65,7 @@ class _MenuPageState extends State<MenuPage> {
                     buildMenu(context, snapshot.data.documents[index]));
           }
       ),
-    );
+    ):NoInternetConnection();
   }
   Widget buildMenu(BuildContext context, DocumentSnapshot info) {
     return Center(

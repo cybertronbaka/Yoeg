@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/common/provider.dart';
@@ -5,6 +7,7 @@ import 'package:yoega/pages/edit_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
+import 'checkConnection.dart';
 import 'manage_event.dart';
 //import 'package:yoega/bloc/navigation_bloc/navigation_bloc.dart';
 
@@ -13,13 +16,32 @@ class EventDashboardPage extends StatefulWidget {
   _EventDashboardPageState createState() => new _EventDashboardPageState();
 }
 class _EventDashboardPageState extends State<EventDashboardPage>{
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   Stream<QuerySnapshot> getEventsOrganized(BuildContext context, DocumentSnapshot snapshot) async* {
     String uid = await Provider.of(context).auth.getCurrentUID();
     yield* Firestore.instance.collection("Events").document(snapshot.documentID).collection("info").where("organizerUID", isEqualTo: uid).snapshots();
   }
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return connected?StreamBuilder(
     stream: Firestore.instance.collection('Events').snapshots(),
     builder: (context, snapshot) {
       if(!snapshot.hasData) return Center(
@@ -60,7 +82,7 @@ class _EventDashboardPageState extends State<EventDashboardPage>{
             }
         );
     }
-    );
+    ):NoInternetConnection();
   }
 }
 

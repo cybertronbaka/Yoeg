@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yoega/pages/checkConnection.dart';
 
 import 'login.dart';
 
@@ -31,7 +32,25 @@ class _UploadPDFPageState extends State<UploadPDFPage>{
   File fileP, fileV;
   String fileNameP = '', fileNameV = "";
   bool participationPDFUploaded = false, volunteerPDFUploaded = false;
-
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
 
   Future filePicker(BuildContext context,String eventID, UploadPDFFor uploadPDFFor) async {
     try {
@@ -98,7 +117,7 @@ class _UploadPDFPageState extends State<UploadPDFPage>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return connected?Scaffold(
         appBar: AppBar(
         //Title should the users Name
         backgroundColor: Colors.teal,
@@ -142,7 +161,7 @@ class _UploadPDFPageState extends State<UploadPDFPage>{
       ],
     ),
     )
-    );
+    ):NoInternetConnection();
   }
   Widget buildPDFUploadWidget(BuildContext context, UploadPDFFor uploadPDFFor){
     File file = uploadPDFFor == UploadPDFFor.participation?fileP:fileV;

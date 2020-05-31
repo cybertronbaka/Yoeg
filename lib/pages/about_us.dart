@@ -1,11 +1,38 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+
+import 'checkConnection.dart';
 
 //import 'package:yoega/bloc/navigation_bloc/navigation_bloc.dart';
 
-class AboutUsPage extends StatelessWidget {
+class AboutUsPage extends StatefulWidget {
+  @override
+  _AboutUsPageState createState()=> new _AboutUsPageState();
+}
+class _AboutUsPageState extends State<AboutUsPage>{
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return connected?Scaffold(
         appBar: AppBar(
           //Title should the users Name
           backgroundColor: Colors.teal,
@@ -235,7 +262,7 @@ class AboutUsPage extends StatelessWidget {
           ),
               SizedBox(height: 100,),
         ])
-    ));
+    )):NoInternetConnection();
   }
 }
 

@@ -1,8 +1,11 @@
 
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:yoega/common/fire_storage_service.dart';
 import 'package:yoega/common/provider.dart';
+import 'package:yoega/pages/checkConnection.dart';
 import 'package:yoega/pages/commentPage.dart';
 import 'package:yoega/pages/event_dashboard.dart';
 import 'package:yoega/pages/event_register.dart';
@@ -27,10 +30,26 @@ class HomePage extends StatefulWidget{
 }
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   TabController controller;
+
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
   @override
   void initState(){
     super.initState();
-    controller = new TabController(length: 5, vsync: this);
+    checkConnection();
+     controller = new TabController(length: 5, vsync: this);
   }
 
   @override
@@ -39,9 +58,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+
+    return connected?Center(
       child: Container(
         color: Colors.grey,
       child: DefaultTabController(
@@ -75,7 +96,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
          )
       )
     )
-    );
+    ):NoInternetConnection();
   }
 
 
@@ -90,11 +111,30 @@ class _HomePageBuildState extends State<HomePageBuild> {
       BuildContext context) async* {
     yield* Firestore.instance.collection('Events').snapshots();
   }
+  bool connected = true;
+  checkConnection() async{
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          connected = true;
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        connected = false;
+      });    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    checkConnection();
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return StreamBuilder(
+    return connected?StreamBuilder(
         stream: getEventDataStreamSnapshots(context),
         builder: (context, snapshot) {
           print("Snapshothasdata " + snapshot.hasData.toString());
@@ -111,7 +151,7 @@ class _HomePageBuildState extends State<HomePageBuild> {
                           index - 1])
           );
         }
-    );
+    ):NoInternetConnection;
   }
 
   Widget buildCardItem(BuildContext context, DocumentSnapshot info) {
@@ -401,7 +441,7 @@ class _EventCardState extends State<EventCard>{
                       Row(
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.person_pin_circle, color: participateRequestID.length!=0?Colors.tealAccent:Colors.black,),
+                            icon: Icon(Icons.person_pin_circle, color: participateRequestID.length!=0?Colors.redAccent:Colors.black,),
                             onPressed: (){
                               //toggle like
                               if(widget.snapshot['participateProc'] == "PDF") {
@@ -437,7 +477,7 @@ class _EventCardState extends State<EventCard>{
                           Container(
                               width: 93,
                               child: FlatButton(
-                                child: Text("Participate", style: TextStyle(fontSize: 12,color:  participateRequestID.length!=0?Colors.tealAccent:Colors.black),),
+                                child: Text("Participate", style: TextStyle(fontSize: 12,color:  participateRequestID.length!=0?Colors.redAccent:Colors.black),),
                                 onPressed: (){
                                   //toggle like
                                   if(widget.snapshot['participateProc'] == "PDF") {
